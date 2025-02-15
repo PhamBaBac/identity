@@ -1,5 +1,6 @@
 package com.bacpham.identity_service.controller;
 
+import com.bacpham.identity_service.dto.request.ApiResponse;
 import com.bacpham.identity_service.dto.request.UserCreationRequest;
 import com.bacpham.identity_service.dto.request.UserUpdateRequest;
 import com.bacpham.identity_service.entity.User;
@@ -18,8 +19,10 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public void createUser(@RequestBody @Validated UserCreationRequest request) {
-        userService.createUser(request);
+    ApiResponse<User> createUser(@RequestBody @Validated UserCreationRequest request) {
+      ApiResponse<User> response = new ApiResponse<>();
+        response.setResult(userService.createUser(request));
+        return response;
     }
 
     @GetMapping
@@ -28,19 +31,26 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public User getUser(@PathVariable UUID userId) {
-        return userService.getUser(userId);
+    ApiResponse<User> getUser(@PathVariable String userId) {
+        ApiResponse<User> response = new ApiResponse<>();
+        response.setResult(userService.getUser(userId));
+        return response;
     }
 
     @PutMapping("/{userId}")
-    public void updateUser(@PathVariable UUID userId, @RequestBody UserUpdateRequest request) {
+    ApiResponse<User> updateUser(@PathVariable String userId, @RequestBody @Validated UserUpdateRequest request) {
+        ApiResponse<User> response = new ApiResponse<>();
         userService.updateUser(userId, request);
+        response.setMessage("User updated successfully");
+        return response;
     }
 
     @DeleteMapping("/{userId}")
-    String deleteUser(@PathVariable UUID userId) {
+    ApiResponse<Void> deleteUser(@PathVariable String userId) {
+        ApiResponse<Void> response = new ApiResponse<>();
         userService.deleteUser(userId);
-        return "User deleted successfully";
+        response.setMessage("User deleted successfully");
+        return response;
     }
 
 }

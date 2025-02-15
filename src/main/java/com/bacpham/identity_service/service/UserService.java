@@ -3,6 +3,8 @@ package com.bacpham.identity_service.service;
 import com.bacpham.identity_service.dto.request.UserCreationRequest;
 import com.bacpham.identity_service.dto.request.UserUpdateRequest;
 import com.bacpham.identity_service.entity.User;
+import com.bacpham.identity_service.exception.AppException;
+import com.bacpham.identity_service.exception.ErrorCode;
 import com.bacpham.identity_service.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +21,7 @@ public class UserService {
         User user = new User();
 
         if(userRepository.existsByUsername(request.getUsername())) {
-            throw new RuntimeException("Username already exists");
+            throw new AppException(ErrorCode.USERNAME_ALREADY_EXISTS);
         }
 
         user.setUsername(request.getUsername());
@@ -33,19 +35,19 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User getUser(UUID userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+    public User getUser(String userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
     }
 
-    public void updateUser(UUID userId, UserUpdateRequest request) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+    public void updateUser(String userId, UserUpdateRequest request) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
         user.setDateOfBirth(request.getDateOfBirth());
         userRepository.save(user);
     }
 
-    public void deleteUser(UUID userId) {
+    public void deleteUser(String userId) {
         userRepository.deleteById(userId);
     }
 }
