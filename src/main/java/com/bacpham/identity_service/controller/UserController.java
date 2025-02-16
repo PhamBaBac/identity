@@ -3,6 +3,7 @@ package com.bacpham.identity_service.controller;
 import com.bacpham.identity_service.dto.request.ApiResponse;
 import com.bacpham.identity_service.dto.request.UserCreationRequest;
 import com.bacpham.identity_service.dto.request.UserUpdateRequest;
+import com.bacpham.identity_service.dto.response.UserResponse;
 import com.bacpham.identity_service.entity.User;
 import com.bacpham.identity_service.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,15 +32,15 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    ApiResponse<User> getUser(@PathVariable String userId) {
-        ApiResponse<User> response = new ApiResponse<>();
+    ApiResponse<UserResponse> getUser(@PathVariable String userId) {
+        ApiResponse<UserResponse> response = new ApiResponse<>();
         response.setResult(userService.getUser(userId));
         return response;
     }
 
     @PutMapping("/{userId}")
-    ApiResponse<User> updateUser(@PathVariable String userId, @RequestBody @Validated UserUpdateRequest request) {
-        ApiResponse<User> response = new ApiResponse<>();
+    ApiResponse<UserResponse> updateUser(@PathVariable String userId, @RequestBody @Validated UserUpdateRequest request) {
+        ApiResponse<UserResponse> response = new ApiResponse<>();
         userService.updateUser(userId, request);
         response.setMessage("User updated successfully");
         return response;

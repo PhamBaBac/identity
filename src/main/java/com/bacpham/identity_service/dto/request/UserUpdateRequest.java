@@ -1,26 +1,18 @@
 package com.bacpham.identity_service.dto.request;
-import java.time.LocalDate;
-public class UserUpdateRequest {
-    private String firstName;
-    private String lastName;
-    private LocalDate dateOfBirth;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
-    public String getFirstName() {
-        return firstName;
-    }
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-    public String getLastName() {
-        return lastName;
-    }
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
-    }
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
+import java.time.LocalDate;
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE)
+public class UserUpdateRequest {
+    String firstName;
+    String lastName;
+    LocalDate dateOfBirth;
 }
