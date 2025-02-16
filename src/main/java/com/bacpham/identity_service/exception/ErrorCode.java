@@ -14,7 +14,8 @@ public enum ErrorCode {
     INVALID_DATE_OF_BIRTH(1003, "Invalid date of birth"),
     INVALID_PASSWORD(1004, "Invalid password"),
     INVALID_USERNAME(1005, "Invalid username"),
-    INVALID_KEY(1006, "Invalid key")
+    INVALID_KEY(1006, "Invalid key"),
+    INVALID_CREDENTIALS(1007, "Invalid credentials")
 
     ;
     int code;

@@ -6,6 +6,8 @@ import com.bacpham.identity_service.dto.request.UserUpdateRequest;
 import com.bacpham.identity_service.dto.response.UserResponse;
 import com.bacpham.identity_service.entity.User;
 import com.bacpham.identity_service.service.UserService;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -15,9 +17,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/users")
+@RequiredArgsConstructor
+@FieldDefaults(makeFinal = true, level = lombok.AccessLevel.PRIVATE)
 public class UserController {
-    @Autowired
-    private UserService userService;
+    UserService userService;
 
     @PostMapping
     ApiResponse<User> createUser(@RequestBody @Validated UserCreationRequest request) {
