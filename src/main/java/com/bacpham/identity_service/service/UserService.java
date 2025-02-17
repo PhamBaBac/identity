@@ -55,6 +55,15 @@ public class UserService {
 
         return userMapper.toUserResponse(user);
     }
+    public UserResponse getMyInfo() {
+        var context = SecurityContextHolder.getContext();
+        String name = context.getAuthentication().getName();
+
+        User user = userRepository.findByUsername(name).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        return userMapper.toUserResponse(user);
+    }
+
 
     @PostAuthorize("returnObject.username == authentication.name")
     public UserResponse updateUser(String userId, UserUpdateRequest request) {

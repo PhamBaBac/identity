@@ -1,5 +1,6 @@
 package com.bacpham.identity_service.dto.request;
 
+import com.bacpham.identity_service.validator.DobConstraint;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -21,5 +22,7 @@ public class UserCreationRequest {
     String password;
     String firstName;
     String lastName;
-    LocalDate dateOfBirth;
+
+    @DobConstraint(min=18, message = "INVALID_DOB")
+    LocalDate dob;
 }
