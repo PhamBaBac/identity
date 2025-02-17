@@ -1,19 +1,16 @@
 package com.bacpham.identity_service.dto.request;
+import java.util.Set;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
-import java.util.List;
-
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserUpdateRequest {
-    String password;
-    String firstName;
-    String lastName;
-    LocalDate dob;
-    List<String> roles;
+public class RoleRequest {
+    String name;
+    String description;
+    Set<String> permissions;
 }

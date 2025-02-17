@@ -8,6 +8,7 @@ import com.bacpham.identity_service.entity.User;
 import com.bacpham.identity_service.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -19,19 +20,23 @@ import java.util.UUID;
 @RequestMapping("/users")
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = lombok.AccessLevel.PRIVATE)
+@Slf4j
 public class UserController {
     UserService userService;
 
     @PostMapping
-    ApiResponse<User> createUser(@RequestBody @Validated UserCreationRequest request) {
-      ApiResponse<User> response = new ApiResponse<>();
-        response.setResult(userService.createUser(request));
-        return response;
+    ApiResponse<UserResponse> createUser(@RequestBody  UserCreationRequest request) {
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.createUser(request))
+                .build();
     }
 
+
     @GetMapping
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    ApiResponse<List<UserResponse>> getUsers() {
+        return ApiResponse.<List<UserResponse>>builder()
+                .result(userService.getUsers())
+                .build();
     }
 
     @GetMapping("/{userId}")
