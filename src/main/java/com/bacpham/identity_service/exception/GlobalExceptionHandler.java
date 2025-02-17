@@ -52,14 +52,16 @@ public class GlobalExceptionHandler {
         String enumKey = Objects.requireNonNull(exception.getFieldError()).getDefaultMessage();
 
         ErrorCode errorCode = ErrorCode.INVALID_KEY;
-        Map attributes = null;
+        Map<String, Object> attributes = null;
         try {
             errorCode = ErrorCode.valueOf(enumKey);
 
             var constraintViolation =
                     exception.getBindingResult().getAllErrors().getFirst().unwrap(ConstraintViolation.class);
 
-            attributes = constraintViolation.getConstraintDescriptor().getAttributes();
+            @SuppressWarnings("unchecked")
+            Map<String, Object> rawAttributes = constraintViolation.getConstraintDescriptor().getAttributes();
+            attributes = rawAttributes;
 
             log.info(attributes.toString());
 
@@ -77,10 +79,9 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.badRequest().body(apiResponse);
     }
-
     private String mapAttribute(String message, Map<String, Object> attributes) {
         String minValue = String.valueOf(attributes.get(MIN_ATTRIBUTE));
 
         return message.replace("{" + MIN_ATTRIBUTE + "}", minValue);
     }
-}
+    }
