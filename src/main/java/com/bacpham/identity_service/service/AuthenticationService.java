@@ -3,6 +3,7 @@ package com.bacpham.identity_service.service;
 import com.bacpham.identity_service.dto.request.AuthenticationRequest;
 import com.bacpham.identity_service.dto.request.IntrospectRequest;
 import com.bacpham.identity_service.dto.request.LogoutRequest;
+import com.bacpham.identity_service.dto.request.RefreshRequest;
 import com.bacpham.identity_service.dto.response.AuthenticationResponse;
 import com.bacpham.identity_service.dto.response.IntrospectResponse;
 import com.bacpham.identity_service.dto.response.UserResponse;
@@ -54,24 +55,11 @@ public class AuthenticationService {
     @Value("${jwt.refreshable-duration}")
     protected long REFRESHABLE_DURATION;
 
-    public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
-        var token = request.getToken();
-        boolean isValid = true;
-
-        try {
-            verifyToken(token, false);
-        } catch (AppException e) {
-            isValid = false;
-        }
-
-        return IntrospectResponse.builder().valid(isValid).build();
-    }
-
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         var user = userRepository
-                .findByUsername(request.getUsername())
-                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_ALREADY_EXISTS));
+                .findByEmail(request.getEmail())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_ALREADY_EXISTS));
 
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
 
@@ -81,6 +69,27 @@ public class AuthenticationService {
 
         return AuthenticationResponse.builder().token(token).isAuthenticated(true).build();
     }
+    public AuthenticationResponse refreshToken(RefreshRequest request) throws ParseException, JOSEException {
+        var signedJWT = verifyToken(request.getToken(), true);
+
+        var jit = signedJWT.getJWTClaimsSet().getJWTID();
+        var expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+
+        InvalidatedToken invalidatedToken =
+                InvalidatedToken.builder().id(jit).expiryTime(expiryTime).build();
+
+        invalidatedTokenRepository.save(invalidatedToken);
+
+        var username = signedJWT.getJWTClaimsSet().getSubject();
+
+        var user =
+                userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+
+        var token = generateToken(user);
+
+        return AuthenticationResponse.builder().token(token).isAuthenticated(true).build();
+    }
+
     public void logout(LogoutRequest request) throws ParseException, JOSEException {
         try {
             var signToken = verifyToken(request.getToken(), true);

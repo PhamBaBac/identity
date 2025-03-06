@@ -1,32 +1,26 @@
 package com.bacpham.identity_service.entity;
 
-import java.time.LocalDate;
-import java.util.Set;
-
 import jakarta.persistence.*;
-
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+@Entity
+@Table(name = "sub_product_images")
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Entity
-public class User {
+public class SubProductImage {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
 
-    String username;
-    String email;
-    String password;
-    String firstName;
-    String lastName;
-    LocalDate dob;
+    @ManyToOne
+    @JoinColumn(name = "sub_product_id", nullable = false)
+    SubProduct subProduct;
 
-    @ManyToMany
-    Set<Role> roles;
+    @Column(nullable = false, columnDefinition = "TEXT")
+    String imageUrl;
 }

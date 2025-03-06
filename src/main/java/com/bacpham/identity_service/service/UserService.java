@@ -36,8 +36,8 @@ public class UserService {
     PasswordEncoder passwordEncoder;
 
     public UserResponse createUser(UserCreationRequest request) {
-        if (userRepository.existsByUsername(request.getUsername()))
-            throw new AppException(ErrorCode.USERNAME_ALREADY_EXISTS);
+        if (userRepository.existsByEmail(request.getEmail()))
+            throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
 
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -83,9 +83,9 @@ public class UserService {
         userRepository.deleteById(userId);
     }
 
-    @PreAuthorize("hasAuthority('CREATE_DATA')")
+//    @PreAuthorize("hasAuthority('CREATE_DATA')")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<UserResponse> getUsers() {
-        log.info("In method get Users");
         return userRepository.findAll().stream().map(userMapper::toUserResponse).toList();
     }
 

@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatusCode;
 public enum ErrorCode {
     UNCATEGORIZED(9999, "Uncategorized", HttpStatus.INTERNAL_SERVER_ERROR),
     USER_NOT_FOUND(1001, "User not found", HttpStatus.NOT_FOUND),
-    USERNAME_ALREADY_EXISTS(1002, "Username already exists", HttpStatus.BAD_REQUEST),
+    USER_ALREADY_EXISTS(1002, "User already exists", HttpStatus.BAD_REQUEST),
     INVALID_DATE_OF_BIRTH(1003, "Invalid date of birth", HttpStatus.BAD_REQUEST),
     INVALID_PASSWORD(1004, "Password must be at least {min} characters", HttpStatus.BAD_REQUEST),
     INVALID_USERNAME(1005, "Username must be at least {min} characters", HttpStatus.BAD_REQUEST),
@@ -21,7 +21,8 @@ public enum ErrorCode {
     UNAUTHENTICATED(1008, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1009, "You do not have permission", HttpStatus.FORBIDDEN),
     INVALID_DOB(1010, "Invalid date of birth {min}", HttpStatus.BAD_REQUEST),
-
+    PRODUCT_NOT_FOUND(1011, "Product not found", HttpStatus.NOT_FOUND),
+    SUB_PRODUCT_NOT_FOUND(1012, "Sub product not found", HttpStatus.NOT_FOUND),
     ;
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;

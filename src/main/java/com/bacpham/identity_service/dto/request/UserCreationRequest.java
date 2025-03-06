@@ -18,6 +18,8 @@ public class UserCreationRequest {
     @Size(min = 5, message = "INVALID_USERNAME")
     String username;
 
+    @NotNull(message = "Email cannot be null")
+    String email;
     @Size(min = 8, message = "INVALID_PASSWORD")
     String password;
     String firstName;
